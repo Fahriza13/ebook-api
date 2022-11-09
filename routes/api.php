@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HelloController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,18 @@ use App\Http\Controllers\BookController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+     return $request->user();
+ });
+
+ Route::post('/register', [AuthController::class, 'register']);
+ Route::post('/login', [AuthController::class, 'login']);
+
+ Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('books', BookController::class)->except('create', 'edit', 'index');
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::resource('autors', AuthorController::class)->except('create', 'edit', 'show', 'index');
+ });
 
 /*
 * Task
